@@ -21,6 +21,15 @@
       <excludeFolder url="file://$MODULE_DIR$/mini_app/.dart_tool" />
       <excludeFolder url="file://$MODULE_DIR$/mini_app/.pub" />
       <excludeFolder url="file://$MODULE_DIR$/mini_app/build" />
+      <excludeFolder url="file://$MODULE_DIR$/Flutter Learning/.dart_tool" />
+      <excludeFolder url="file://$MODULE_DIR$/Flutter Learning/.pub" />
+      <excludeFolder url="file://$MODULE_DIR$/Flutter Learning/build" />
+      <excludeFolder url="file://$MODULE_DIR$/Flutter Learning/lib/flutter_calculator/.dart_tool" />
+      <excludeFolder url="file://$MODULE_DIR$/Flutter Learning/lib/flutter_calculator/.pub" />
+      <excludeFolder url="file://$MODULE_DIR$/Flutter Learning/lib/flutter_calculator/build" />
+      <excludeFolder url="file://$MODULE_DIR$/Social_Media_App/.dart_tool" />
+      <excludeFolder url="file://$MODULE_DIR$/Social_Media_App/.pub" />
+      <excludeFolder url="file://$MODULE_DIR$/Social_Media_App/build" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />

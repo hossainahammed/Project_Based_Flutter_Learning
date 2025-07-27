@@ -2,9 +2,10 @@
 <project version="4">
   <component name="VcsDirectoryMappings">
     <mapping directory="$PROJECT_DIR$" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/Flutter Learning" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/Flutter_Assignment" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/Tab_bar" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/app_1" vcs="Git" />
-    <mapping directory="$PROJECT_DIR$/if_else_statement" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/login_page" vcs="Git" />
   </component>
 </project>

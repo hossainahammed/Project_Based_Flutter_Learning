@@ -327,46 +327,53 @@ class _ResponsiveExpenseTrackerState extends State<ResponsiveExpenseTracker> {
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 8.0),
                 child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Expanded(
+                    SizedBox(
+                      width: MediaQuery.of(context).size.width * 0.45,
+                      height: 100,
                       child: Card(
                         color: Colors.orangeAccent,
                         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                         child: Padding(
-                          padding: const EdgeInsets.all(16.0),
+                          padding: const EdgeInsets.all(12.0),
                           child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               Text(
                                 'Total Expense',
-                                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                                style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
                               ),
                               SizedBox(height: 8),
                               Text(
                                 '$_currency${totall_expanse.toStringAsFixed(2)}',
-                                style: TextStyle(fontSize: 18),
+                                style: TextStyle(fontSize: 16),
                               ),
                             ],
                           ),
                         ),
                       ),
                     ),
-                    SizedBox(width: 10),
-                    Expanded(
+                    SizedBox(width: 8),
+                    SizedBox(
+                      width: MediaQuery.of(context).size.width * 0.45,
+                      height: 100,
                       child: Card(
                         color: (_budgetLimit - totall_expanse) < 0 ? Colors.redAccent : Colors.teal,
                         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                         child: Padding(
-                          padding: const EdgeInsets.all(16.0),
+                          padding: const EdgeInsets.all(12.0),
                           child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               Text(
-                                'Available Balance ',
-                                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold,),
+                                'Available Balance',
+                                style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
                               ),
                               SizedBox(height: 8),
                               Text(
                                 '$_currency${(_budgetLimit - totall_expanse).toStringAsFixed(2)}',
-                                style: TextStyle(fontSize: 18),
+                                style: TextStyle(fontSize: 16),
                               ),
                             ],
                           ),
@@ -376,6 +383,8 @@ class _ResponsiveExpenseTrackerState extends State<ResponsiveExpenseTracker> {
                   ],
                 ),
               ),
+
+
 
               Expanded(
                 child: ListView.builder(
