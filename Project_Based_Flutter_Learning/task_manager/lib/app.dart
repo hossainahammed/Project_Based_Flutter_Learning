@@ -76,7 +76,7 @@ class TaskManagerApp extends StatelessWidget {
         SignInScreen.name:(context)=>SignInScreen(),
         SignUpScreen.name:(context)=>SignUpScreen(),
         ForgotPaswordEmailScreen.name:(context)=>ForgotPaswordEmailScreen(),
-        PinVerificationScreen.name:(context)=>PinVerificationScreen(),
+        PinVerificationScreen.name:(context)=>PinVerificationScreen(email: '',),
         changePasswordScreen.name:(context)=>changePasswordScreen(),
         MainNavBarHolderScreen.name:(context)=>MainNavBarHolderScreen(),
         AddNewTaskScreen.name:(context)=>AddNewTaskScreen(),

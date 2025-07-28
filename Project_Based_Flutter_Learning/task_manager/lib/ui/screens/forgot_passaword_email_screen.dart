@@ -1,23 +1,24 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
-import 'package:task_manager/ui/screens/pin_verification_screen.dart';
-import 'package:task_manager/ui/widgets/screen_bagground.dart';
-import '../utils/asset_paths.dart';
-import 'Sign-Up-Screen.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
+
+import '../../data/urls.dart';
+import '../widgets/screen_bagground.dart';
+import 'pin_verification_screen.dart';
 
 class ForgotPaswordEmailScreen extends StatefulWidget {
   const ForgotPaswordEmailScreen({super.key});
   static const String name = '/forgot-password-email';
 
   @override
-  State<ForgotPaswordEmailScreen> createState() =>
-      _ForgotPaswordEmailScreenState();
+  State<ForgotPaswordEmailScreen> createState() => _ForgotPaswordEmailScreenState();
 }
 
 class _ForgotPaswordEmailScreenState extends State<ForgotPaswordEmailScreen> {
   final TextEditingController _emailTEController = TextEditingController();
   final GlobalKey<FormState> _formkey = GlobalKey<FormState>();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -39,12 +40,9 @@ class _ForgotPaswordEmailScreenState extends State<ForgotPaswordEmailScreen> {
                     ),
                   ),
                   SizedBox(height: 16),
-
                   Text(
-                    'A six digit OTP will send to your email adress',
-                    style: Theme.of(
-                      context,
-                    ).textTheme.titleSmall?.copyWith(color: Colors.grey),
+                    'A six-digit OTP will be sent to your email address',
+                    style: Theme.of(context).textTheme.titleSmall?.copyWith(color: Colors.grey),
                   ),
                   SizedBox(height: 24),
                   TextFormField(
@@ -58,7 +56,6 @@ class _ForgotPaswordEmailScreenState extends State<ForgotPaswordEmailScreen> {
                       return null;
                     },
                   ),
-
                   SizedBox(height: 16),
                   ElevatedButton(
                     onPressed: _onTapSubmitButton,
@@ -68,21 +65,19 @@ class _ForgotPaswordEmailScreenState extends State<ForgotPaswordEmailScreen> {
                   Center(
                     child: RichText(
                       text: TextSpan(
-                        text: "Have an account ?",
+                        text: "Have an account?",
                         style: TextStyle(
                           fontWeight: FontWeight.w600,
                           letterSpacing: 0.4,
                         ),
                         children: [
                           TextSpan(
-                            text: 'Sign In',
+                            text: ' Sign In',
                             style: TextStyle(
                               color: Colors.green,
                               fontWeight: FontWeight.w700,
                             ),
-                            recognizer:
-                                TapGestureRecognizer()
-                                  ..onTap = _onTapSignInButton,
+                            recognizer: TapGestureRecognizer()..onTap = _onTapSignInButton,
                           ),
                         ],
                       ),
@@ -98,11 +93,44 @@ class _ForgotPaswordEmailScreenState extends State<ForgotPaswordEmailScreen> {
   }
 
   void _onTapSubmitButton() {
-   Navigator.pushNamed(context, PinVerificationScreen.name);
+    if (_formkey.currentState!.validate()) {
+      String email = _emailTEController.text.trim();
+      _sendOtp(email);
+    }
+  }
+
+  Future<void> _sendOtp(String email) async {
+    final url = Urls.verifyEmailUrl(email);
+    print("Sending OTP to URL: $url");
+    try {
+      final response = await http.get(Uri.parse(url));
+      print("Response status: ${response.statusCode}");
+      print("Response body: ${response.body}");
+      if (response.statusCode == 200) {
+        final jsonResponse = jsonDecode(response.body);
+        print("Response from server: $jsonResponse");
+        if (jsonResponse['status'] == 'success') {
+          print("OTP sent to email.");
+          // Navigate to the Pin Verification Screen and pass the email
+          Navigator.pushNamed(context, PinVerificationScreen.name, arguments: email);
+        } else {
+          _showError(jsonResponse['message'] ?? 'Failed to send OTP.');
+        }
+      } else {
+        _showError('Failed to send OTP. Server error ${response.statusCode}');
+      }
+    } catch (e) {
+      _showError('Failed to send OTP. ${e.toString()}');
+    }
   }
 
   void _onTapSignInButton() {
     Navigator.pop(context);
+  }
+
+  void _showError(String message) {
+    if (!mounted) return;
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(message)));
   }
 
   @override

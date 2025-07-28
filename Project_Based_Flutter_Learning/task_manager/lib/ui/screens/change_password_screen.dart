@@ -1,19 +1,18 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
-import 'package:pin_code_fields/pin_code_fields.dart';
-import 'package:task_manager/ui/screens/sign_in_screen.dart';
-import 'package:task_manager/ui/widgets/screen_bagground.dart';
-import '../utils/asset_paths.dart';
-import 'Sign-Up-Screen.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
+
+import '../../data/urls.dart';
+import '../widgets/screen_bagground.dart';
+import 'sign_in_screen.dart';
 
 class changePasswordScreen extends StatefulWidget {
   const changePasswordScreen({super.key});
   static const String name = '/change-password';
 
   @override
-  State<changePasswordScreen> createState() =>
-      _changePasswordScreenState();
+  State<changePasswordScreen> createState() => _changePasswordScreenState();
 }
 
 class _changePasswordScreenState extends State<changePasswordScreen> {
@@ -44,19 +43,16 @@ class _changePasswordScreenState extends State<changePasswordScreen> {
                     ),
                   ),
                   SizedBox(height: 16),
-
                   Text(
                     'Password should be more than 6 letters.',
-                    style: Theme.of(
-                      context,
-                    ).textTheme.titleSmall?.copyWith(color: Colors.grey),
+                    style: Theme.of(context).textTheme.titleSmall?.copyWith(color: Colors.grey),
                   ),
                   SizedBox(height: 24),
                   TextFormField(
                     controller: _passwordTEController,
                     obscureText: _obscurePassword,
                     decoration: InputDecoration(
-                        hintText: 'Password',
+                      hintText: 'Password',
                       suffixIcon: IconButton(
                         icon: Icon(
                           _obscurePassword ? Icons.visibility_off : Icons.visibility,
@@ -68,10 +64,9 @@ class _changePasswordScreenState extends State<changePasswordScreen> {
                           });
                         },
                       ),
-
                     ),
-                    validator: (String?value){
-                      if(value?.isEmpty ?? true){
+                    validator: (String? value) {
+                      if (value?.isEmpty ?? true) {
                         return 'Enter a valid Password';
                       }
                       return null;
@@ -102,31 +97,28 @@ class _changePasswordScreenState extends State<changePasswordScreen> {
                       return null;
                     },
                   ),
-
-
                   SizedBox(height: 16),
                   ElevatedButton(
-                    onPressed: _onTapSignInButton,
+                    onPressed: _onTapSubmitButton,
                     child: Text('Confirm'),
                   ),
                   SizedBox(height: 32),
                   Center(
                     child: RichText(
                       text: TextSpan(
-                        text: "Have an account ?",
+                        text: "Have an account?",
                         style: TextStyle(
                           fontWeight: FontWeight.w600,
                           letterSpacing: 0.4,
                         ),
                         children: [
                           TextSpan(
-                            text: 'Sign In',
+                            text: ' Sign In',
                             style: TextStyle(
                               color: Colors.green,
                               fontWeight: FontWeight.w700,
                             ),
-                            recognizer:
-                            TapGestureRecognizer()
+                            recognizer: TapGestureRecognizer()
                               ..onTap = _onTapSignInButton,
                           ),
                         ],
@@ -143,15 +135,79 @@ class _changePasswordScreenState extends State<changePasswordScreen> {
   }
 
   void _onTapSubmitButton() {
-    // if (_formkey.currentState!.validate()) {
-    //   //TODO:Sign in with Api
-    // }
+    if (_formkey.currentState!.validate()) {
+      String newPassword = _passwordTEController.text.trim();
+      // Call the API to change the password
+      _changePassword(newPassword);
+    }
   }
+  Future<void> _changePassword(String newPassword) async {
+    final url = '${Urls.baseUrl}/RecoverResetPassword'; // Construct the full URL
+    final headers = {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json', // Add this header
+    };
+    final body = jsonEncode({'password': newPassword, }); // Adjust based on your API requirements
+
+    try {
+      final response = await http.post(Uri.parse(url), headers: headers, body: body);
+      print("Response status: ${response.statusCode}");
+      print("Response body: ${response.body}");
+
+      if (response.statusCode == 200) {
+        final jsonResponse = jsonDecode(response.body);
+        if (jsonResponse['status'] == 'success') {
+          // Password changed successfully
+          Navigator.pushNamedAndRemoveUntil(context, SignInScreen.name, (predicate) => false);
+        } else {
+          _showError(jsonResponse['data'] ?? 'Failed to change password.');
+        }
+      } else {
+        _showError('Failed to change password. Status code: ${response.statusCode}');
+      }
+    } catch (e) {
+      _showError('An error occurred: ${e.toString()}');
+    }
+  }
+  // Future<void> _changePassword(String newPassword) async {
+  //   final url = '${Urls.baseUrl}/RecoverResetPassword'; // Construct the full URL
+  //   final headers = {
+  //     'Content-Type': 'application/json',
+  //     'Accept': 'application/json', // Add this header if needed
+  //   };
+  //   final body = jsonEncode({'password': newPassword}); // Adjust based on your API requirements
+  //
+  //   try {
+  //     final response = await http.post(Uri.parse(url), headers: headers, body: body);
+  //     print("Response status: ${response.statusCode}");
+  //     print("Response body: ${response.body}");
+  //
+  //     if (response.statusCode == 200) {
+  //       final jsonResponse = jsonDecode(response.body);
+  //       if (jsonResponse['status'] == 'success') {
+  //         // Password changed successfully
+  //         Navigator.pushNamedAndRemoveUntil(context, SignInScreen.name, (predicate) => false);
+  //       } else {
+  //         _showError(jsonResponse['data'] ?? 'Failed to change password.');
+  //       }
+  //     } else {
+  //       _showError('Failed to change password. Status code: ${response.statusCode}');
+  //     }
+  //   } catch (e) {
+  //     _showError('An error occurred: ${e.toString()}');
+  //   }
+  // }
 
   void _onTapSignInButton() {
-    Navigator.pushNamedAndRemoveUntil(context, SignInScreen.name, (predicate)=>false);
+    Navigator.pushNamedAndRemoveUntil(context, SignInScreen.name, (predicate) => false);
   }
 
+  void _showError(String message) {
+    if (!mounted) return; // Check if the widget is still mounted
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(message)));
+  }
+
+  @override
   void dispose() {
     _passwordTEController.dispose();
     _confirmpasswordTEController.dispose();
