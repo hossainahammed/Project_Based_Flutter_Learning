@@ -6,6 +6,7 @@ import 'package:task_manager/data/models/user_model.dart';
 import 'package:task_manager/data/service/network_caller.dart';
 import 'package:task_manager/data/urls.dart';
 import 'package:task_manager/ui/controllers/auth_controller.dart';
+import 'package:task_manager/ui/controllers/sign_in_controller.dart';
 import 'package:task_manager/ui/screens/forgot_passaword_email_screen.dart';
 import 'package:task_manager/ui/screens/main_nav_bar_holder_screen.dart';
 import 'package:task_manager/ui/widgets/screen_bagground.dart ';
@@ -25,7 +26,9 @@ class _SignInScreenState extends State<SignInScreen> {
   final TextEditingController _emailTEController = TextEditingController();
   final TextEditingController _passwordTEController = TextEditingController();
   final GlobalKey<FormState> _formkey = GlobalKey<FormState>();
-  bool _signInProgress = false;
+  final SignIncontroller _signIncontroller = SignIncontroller();
+
+  //bool _signInProgress = false;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -71,13 +74,18 @@ class _SignInScreenState extends State<SignInScreen> {
                     },
                   ),
                   SizedBox(height: 16),
-                  Visibility(
-                    visible: _signInProgress == false,
-                    replacement: CenteredCircularProgressIndicator(),
-                    child: ElevatedButton(
-                      onPressed: _onTapSignInButton,
-                      child: Icon(Icons.arrow_circle_right_outlined),
-                    ),
+                  GetBuilder(
+                    init: _signIncontroller,
+                    builder: (controller) {
+                      return Visibility(
+                        visible: controller.inProgress == false,
+                        replacement: CenteredCircularProgressIndicator(),
+                        child: ElevatedButton(
+                          onPressed: _onTapSignInButton,
+                          child: Icon(Icons.arrow_circle_right_outlined),
+                        ),
+                      );
+                    }
                   ),
                   SizedBox(height: 32),
                   Center(
@@ -135,43 +143,58 @@ class _SignInScreenState extends State<SignInScreen> {
   }
 
   Future<void> _signIn() async {
-    _signInProgress = true;
-    setState(() {});
-    Map<String, String> requestBody = {
-      "email": _emailTEController.text.trim(),
-      "password": _passwordTEController.text,
-    };
-    NetworkResponse response = await NetworkCaller.postRequest(
-      url: Urls.loginUrl,
-      body: requestBody,
-      isFromLogin: true,
-    );
-    if (response.isSuccess) {
-      UserModel userModel = UserModel.fromJson(response.body!['data']);
-      String token = response.body!['token'];
-
-      await AuthController.saveUserData(userModel, token);
-
-      // Navigator.pushNamedAndRemoveUntil(
-      //   context,
-      //   MainNavBarHolderScreen.name,
-      //   (predicate) => false,
-      // );
-      //--------------------------------- OR -------------------------
-      // Get.to(() => const MainNavBarHolderScreen());
-      //--------------------------------- OR -------------------------
-      // Get.toNamed(MainNavBarHolderScreen.name);
-      // If we want to it remove all previous screen then sign in .then we need to use   Get.offAllNamed(MainNavBarHolderScreen.name);
+    final bool isSuccess = await _signIncontroller.signIn(_emailTEController.text.trim(),_passwordTEController.text);
+    if(isSuccess){
       Get.offAllNamed(MainNavBarHolderScreen.name);
-      
-    } else {
-      _signInProgress = false;
-      setState(() {});
-      showSnackBarMessage(context, response.errorMessage!);
+    }
+    else{
+      if(mounted){
+        showSnackBarMessage(context, _signIncontroller.errorMessage!);
+      }
+
+
     }
   }
+// Without sign_in_controller we do it as  below
+  // Future<void> _signIn() async {
+  //   _signInProgress = true;
+  //   setState(() {});
+  //   Map<String, String> requestBody = {
+  //     "email": _emailTEController.text.trim(),
+  //     "password": _passwordTEController.text,
+  //   };
+  //   NetworkResponse response = await NetworkCaller.postRequest(
+  //     url: Urls.loginUrl,
+  //     body: requestBody,
+  //     isFromLogin: true,
+  //   );
+  //   if (response.isSuccess) {
+  //     UserModel userModel = UserModel.fromJson(response.body!['data']);
+  //     String token = response.body!['token'];
+  //
+  //     await AuthController.saveUserData(userModel, token);
+  //
+  //     // Navigator.pushNamedAndRemoveUntil(
+  //     //   context,
+  //     //   MainNavBarHolderScreen.name,
+  //     //   (predicate) => false,
+  //     // );
+  //     //--------------------------------- OR -------------------------
+  //     // Get.to(() => const MainNavBarHolderScreen());
+  //     //--------------------------------- OR -------------------------
+  //      //Get.toNamed(MainNavBarHolderScreen.name);
+  //     // If we want to it remove all previous screen then sign in .then we need to use   Get.offAllNamed(MainNavBarHolderScreen.name);
+  //     Get.offAllNamed(MainNavBarHolderScreen.name);
+  //
+  //   } else {
+  //     _signInProgress = false;
+  //     setState(() {});
+  //     showSnackBarMessage(context, response.errorMessage!);
+  //   }
+  // }
 
   void _onTapForgotPasswordButton() {
+
     Navigator.pushNamed(context, ForgotPaswordEmailScreen.name);
   }
 

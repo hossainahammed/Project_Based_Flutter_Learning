@@ -4,13 +4,15 @@ import 'package:http/http.dart' as http;
 import 'package:pin_code_fields/pin_code_fields.dart';
 import 'package:task_manager/ui/screens/sign_in_screen.dart';
 import 'dart:convert';
-
 import '../../data/urls.dart';
 import '../widgets/screen_bagground.dart';
 import 'change_password_screen.dart';
+
+
 class PinVerificationScreen extends StatefulWidget {
   final String email;
   const PinVerificationScreen({super.key, required this.email});
+
   static const String name = '/pin-verification';
 
   @override
@@ -21,10 +23,13 @@ class _PinVerificationScreenState extends State<PinVerificationScreen> {
   final TextEditingController _otpTEController = TextEditingController();
   final GlobalKey<FormState> _formkey = GlobalKey<FormState>();
 
+  late String _email;
+
   @override
   void initState() {
     super.initState();
-    // Optionally, you can send the OTP here if needed
+    _email = widget.email;
+
   }
 
   @override
@@ -72,7 +77,7 @@ class _PinVerificationScreenState extends State<PinVerificationScreen> {
                     controller: _otpTEController,
                     beforeTextPaste: (text) {
                       print("Allowing to paste $text");
-                      return true; // Allow pasting
+                      return true;
                     },
                     appContext: context,
                   ),
@@ -120,13 +125,14 @@ class _PinVerificationScreenState extends State<PinVerificationScreen> {
       _showError('Please enter a valid OTP.');
     }
   }
-
   void _onTapSignInButton() {
-    Navigator.pushNamedAndRemoveUntil(context, SignInScreen.name, (predicate) => false);
+
+
+     Navigator.pushNamedAndRemoveUntil(context, SignInScreen.name, (predicate) => false);
   }
 
   void _showError(String message) {
-    if (!mounted) return; // Check if the widget is still mounted
+    if (!mounted) return;
     ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(message)));
   }
 

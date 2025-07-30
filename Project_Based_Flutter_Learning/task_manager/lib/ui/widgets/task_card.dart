@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:task_manager/ui/widgets/snackbar_message.dart';
-
 import '../../data/models/task_model.dart';
 import '../../data/service/network_caller.dart';
 import '../../data/urls.dart';

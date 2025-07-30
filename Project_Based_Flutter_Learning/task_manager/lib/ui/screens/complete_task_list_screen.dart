@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:task_manager/ui/widgets/task_card.dart';
-
 import '../../data/models/task_model.dart';
 import '../../data/service/network_caller.dart';
 import '../../data/urls.dart';
@@ -21,7 +20,7 @@ class _CompleteTaskListScreenState extends State<CompleteTaskListScreen> {
   @override
   void initState() {
     super.initState();
-    _getCompleteTaskList(); // Fetch the complete task list when the screen is initialized
+    _getCompleteTaskList();
   }
 
   @override
@@ -51,24 +50,24 @@ class _CompleteTaskListScreenState extends State<CompleteTaskListScreen> {
   }
 
   Future<void> _getCompleteTaskList() async {
-    _getCompleteTasksInProgress = true; // Set loading state
+    _getCompleteTasksInProgress = true;
     setState(() {});
 
     NetworkResponse response = await NetworkCaller
         .getRequest(url: Urls.getCompletedTasksUrl);
 
     if (response.isSuccess) {
-      print(response.body); // Log the response for debugging
+     // print(response.body);
       List<TaskModel> list = [];
       for (Map<String, dynamic> jsonData in response.body!['data']) {
-        list.add(TaskModel.fromJson(jsonData)); // Parse each task
+        list.add(TaskModel.fromJson(jsonData));
       }
-      _completeTaskList = list; // Update the complete task list
+      _completeTaskList = list;
     } else {
       showSnackBarMessage(context, response.errorMessage!);
     }
 
-    _getCompleteTasksInProgress = false; // Reset loading state
+    _getCompleteTasksInProgress = false;
     setState(() {});
   }
 }

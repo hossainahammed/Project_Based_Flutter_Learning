@@ -142,12 +142,12 @@ class _changePasswordScreenState extends State<changePasswordScreen> {
     }
   }
   Future<void> _changePassword(String newPassword) async {
-    final url = '${Urls.baseUrl}/RecoverResetPassword'; // Construct the full URL
+    final url = '${Urls.baseUrl}/RecoverResetPassword';
     final headers = {
       'Content-Type': 'application/json',
-      'Accept': 'application/json', // Add this header
+      'Accept': 'application/json',
     };
-    final body = jsonEncode({'password': newPassword, }); // Adjust based on your API requirements
+    final body = jsonEncode({'password': newPassword, });
 
     try {
       final response = await http.post(Uri.parse(url), headers: headers, body: body);
@@ -169,41 +169,14 @@ class _changePasswordScreenState extends State<changePasswordScreen> {
       _showError('An error occurred: ${e.toString()}');
     }
   }
-  // Future<void> _changePassword(String newPassword) async {
-  //   final url = '${Urls.baseUrl}/RecoverResetPassword'; // Construct the full URL
-  //   final headers = {
-  //     'Content-Type': 'application/json',
-  //     'Accept': 'application/json', // Add this header if needed
-  //   };
-  //   final body = jsonEncode({'password': newPassword}); // Adjust based on your API requirements
-  //
-  //   try {
-  //     final response = await http.post(Uri.parse(url), headers: headers, body: body);
-  //     print("Response status: ${response.statusCode}");
-  //     print("Response body: ${response.body}");
-  //
-  //     if (response.statusCode == 200) {
-  //       final jsonResponse = jsonDecode(response.body);
-  //       if (jsonResponse['status'] == 'success') {
-  //         // Password changed successfully
-  //         Navigator.pushNamedAndRemoveUntil(context, SignInScreen.name, (predicate) => false);
-  //       } else {
-  //         _showError(jsonResponse['data'] ?? 'Failed to change password.');
-  //       }
-  //     } else {
-  //       _showError('Failed to change password. Status code: ${response.statusCode}');
-  //     }
-  //   } catch (e) {
-  //     _showError('An error occurred: ${e.toString()}');
-  //   }
-  // }
+
 
   void _onTapSignInButton() {
     Navigator.pushNamedAndRemoveUntil(context, SignInScreen.name, (predicate) => false);
   }
 
   void _showError(String message) {
-    if (!mounted) return; // Check if the widget is still mounted
+    if (!mounted) return;
     ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(message)));
   }
 

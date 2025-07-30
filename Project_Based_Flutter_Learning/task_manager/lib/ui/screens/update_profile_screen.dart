@@ -32,7 +32,6 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
   bool _updateProfileInProgress = false;
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     _emailTEController.text = AuthController.userModel?.email ?? '';
     _firstNameTEController.text = AuthController.userModel?.firstName ?? '';

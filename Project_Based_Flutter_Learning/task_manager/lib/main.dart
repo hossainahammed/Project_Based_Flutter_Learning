@@ -7,9 +7,7 @@ void main(){
   runApp(
       DevicePreview(
         enabled: true,
-        //builder: (context)=>MyApp1() ,
         builder: (context)=>TaskManagerApp() ,
-        //builder: (context)=>waterTracker() ,
       )
   );
 }

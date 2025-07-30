@@ -28,7 +28,9 @@ class Urls {
 
   // Your Recover Password endpoints
   static String verifyEmailUrl(String email) => '$_baseUrl/RecoverVerifyEmail/$email';
-  static String verifyOtpUrl(String email, String otp) => '$_baseUrl/RecoverVerifyOtp/$email/$otp';
+  static String verifyOtpUrl(String email, String otp) =>
+      '$_baseUrl/RecoverVerifyOtp/${Uri.encodeComponent(email)}/$otp';
+
   static const String resetPasswordUrl = '$_baseUrl/RecoverResetPassword';
 
   // Task-related endpoints
