@@ -6,6 +6,11 @@ import 'package:task_manager/data/models/user_model.dart';
 import 'package:task_manager/data/service/network_caller.dart';
 import 'package:task_manager/data/urls.dart';
 import 'package:task_manager/ui/controllers/auth_controller.dart';
+import 'package:task_manager/ui/screens/update_profile_screen.dart' as _emailTEController;
+import 'package:task_manager/ui/screens/update_profile_screen.dart' as _firstNameTEController;
+import 'package:task_manager/ui/screens/update_profile_screen.dart' as _lastNameTEController;
+import 'package:task_manager/ui/screens/update_profile_screen.dart' as _phoneTEController;
+import 'package:task_manager/ui/screens/update_profile_screen.dart' as _passwordTEController;
 import 'package:task_manager/ui/widgets/centered_circular_progress_indicator.dart';
 import 'package:task_manager/ui/widgets/screen_bagground.dart';
 import 'package:task_manager/ui/widgets/snackbar_message.dart';
@@ -213,19 +218,20 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
       setState(() {});
     }
 
-    Uint8List? imageBytes;
+    //Uint8List? imageBytes;
 
     Map<String, String> requestBody = {
       "email": _emailTEController.text,
       "firstName": _firstNameTEController.text.trim(),
       "lastName": _lastNameTEController.text.trim(),
       "mobile": _phoneTEController.text.trim(),
+     // "photo":""
     };
     if (_passwordTEController.text.isNotEmpty) {
       requestBody['password'] = _passwordTEController.text;
     }
     if (_selectedImage != null) {
-      imageBytes = await _selectedImage!.readAsBytes();
+     Uint8List imageBytes = await _selectedImage!.readAsBytes();
       requestBody['photo'] = base64Encode(imageBytes);
     }
 
@@ -238,31 +244,42 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
       setState(() {});
     }
     if (response.isSuccess) {
-
-      UserModel userModel = UserModel(
-        id: AuthController.userModel!.id,
-        email: _emailTEController.text,
-        firstName: _firstNameTEController.text.trim(),
-        lastName: _lastNameTEController.text.trim(),
-        mobile: _phoneTEController.text.trim(),
-        photo:
-            imageBytes == null
-                ? AuthController.userModel?.photo
-                : base64Encode(imageBytes)
-      );
-
-      await AuthController.updateUserData(userModel,AuthController.accessToken ?? '');
-
       _passwordTEController.clear();
-      if (mounted) {
-        showSnackBarMessage(context, 'Profile Update');
+      if(mounted){
+        showSnackBarMessage(context, 'Profile updated');
       }
-    } else {
-      if (mounted) {
-        showSnackBarMessage(context, 'Profile Update');
+
+    }else{
+      if(mounted){
+        showSnackBarMessage(context, response.errorMessage!);
       }
+
     }
-  }
+
+      // UserModel userModel = UserModel(
+      //   id: AuthController.userModel!.id,
+      //   email: _emailTEController.text,
+      //   firstName: _firstNameTEController.text.trim(),
+      //   lastName: _lastNameTEController.text.trim(),
+      //   mobile: _phoneTEController.text.trim(),
+      //   photo:
+      //       imageBytes == null
+      //           ? AuthController.userModel?.photo
+      //           : base64Encode(imageBytes)
+      // );
+
+    //   await AuthController.updateUserData(userModel,AuthController.accessToken ?? '');
+    //
+    //   _passwordTEController.clear();
+    //   if (mounted) {
+    //     showSnackBarMessage(context, 'Profile Update');
+    //   }
+    // } else {
+    //   if (mounted) {
+    //     showSnackBarMessage(context, 'Profile Update');
+    //   }
+    }
+
 
   @override
   void dispose() {

@@ -2,10 +2,6 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
-import 'package:task_manager/data/models/user_model.dart';
-import 'package:task_manager/data/service/network_caller.dart';
-import 'package:task_manager/data/urls.dart';
-import 'package:task_manager/ui/controllers/auth_controller.dart';
 import 'package:task_manager/ui/controllers/sign_in_controller.dart';
 import 'package:task_manager/ui/screens/forgot_passaword_email_screen.dart';
 import 'package:task_manager/ui/screens/main_nav_bar_holder_screen.dart';
@@ -26,7 +22,9 @@ class _SignInScreenState extends State<SignInScreen> {
   final TextEditingController _emailTEController = TextEditingController();
   final TextEditingController _passwordTEController = TextEditingController();
   final GlobalKey<FormState> _formkey = GlobalKey<FormState>();
-  final SignIncontroller _signIncontroller = SignIncontroller();
+  bool _obscureText = true;
+  // final SignIncontroller _signIncontroller = SignIncontroller();
+  final SignIncontroller _signIncontroller = Get.find<SignIncontroller>();
 
   //bool _signInProgress = false;
   @override
@@ -53,7 +51,7 @@ class _SignInScreenState extends State<SignInScreen> {
                   TextFormField(
                     controller: _emailTEController,
                     textInputAction: TextInputAction.next,
-                    decoration: InputDecoration(hintText: 'Email'),
+                    decoration: InputDecoration(hintText: 'Email',prefixIcon: Icon(Icons.email),),
                     validator: (String? value) {
                       if (value?.isEmpty ?? true) {
                         return 'Enter a valid email';
@@ -64,8 +62,12 @@ class _SignInScreenState extends State<SignInScreen> {
                   SizedBox(height: 8),
                   TextFormField(
                     controller: _passwordTEController,
-                    obscureText: true,
-                    decoration: InputDecoration(hintText: 'Password'),
+                    obscureText: _obscureText,
+                    decoration: InputDecoration(hintText: 'Password',prefixIcon: const Icon(Icons.lock),
+                      suffixIcon: IconButton(
+                        icon: Icon(_obscureText ? Icons.visibility : Icons.visibility_off),
+                        onPressed: () => setState(() => _obscureText = !_obscureText),),),
+
                     validator: (String? value) {
                       if (value?.isEmpty ?? true) {
                         return 'Enter a valid Password';
@@ -74,18 +76,18 @@ class _SignInScreenState extends State<SignInScreen> {
                     },
                   ),
                   SizedBox(height: 16),
-                  GetBuilder(
-                    init: _signIncontroller,
-                    builder: (controller) {
-                      return Visibility(
-                        visible: controller.inProgress == false,
-                        replacement: CenteredCircularProgressIndicator(),
-                        child: ElevatedButton(
-                          onPressed: _onTapSignInButton,
-                          child: Icon(Icons.arrow_circle_right_outlined),
-                        ),
-                      );
-                    }
+                  GetBuilder<SignIncontroller>(
+                    // init: _signIncontroller,
+                      builder: (controller) {
+                        return Visibility(
+                          visible: controller.inProgress == false,
+                          replacement: CenteredCircularProgressIndicator(),
+                          child: ElevatedButton(
+                            onPressed: _onTapSignInButton,
+                            child: Icon(Icons.arrow_circle_right_outlined),
+                          ),
+                        );
+                      }
                   ),
                   SizedBox(height: 32),
                   Center(
@@ -113,8 +115,8 @@ class _SignInScreenState extends State<SignInScreen> {
                                   fontWeight: FontWeight.w700,
                                 ),
                                 recognizer:
-                                    TapGestureRecognizer()
-                                      ..onTap = _onTapSignUpButton,
+                                TapGestureRecognizer()
+                                  ..onTap = _onTapSignUpButton,
                               ),
                             ],
                           ),
@@ -138,11 +140,12 @@ class _SignInScreenState extends State<SignInScreen> {
     Navigator.pushNamedAndRemoveUntil(
       context,
       MainNavBarHolderScreen.name,
-      (predicate) => false,
+          (predicate) => false,
     );
   }
 
   Future<void> _signIn() async {
+
     final bool isSuccess = await _signIncontroller.signIn(_emailTEController.text.trim(),_passwordTEController.text);
     if(isSuccess){
       Get.offAllNamed(MainNavBarHolderScreen.name);
@@ -194,7 +197,9 @@ class _SignInScreenState extends State<SignInScreen> {
   // }
 
   void _onTapForgotPasswordButton() {
-
+    // if (_formkey.currentState!.validate()) {
+    //   _signIn();
+    // }
     Navigator.pushNamed(context, ForgotPaswordEmailScreen.name);
   }
 

@@ -5,7 +5,7 @@ import '../../data/service/network_caller.dart';
 import '../../data/urls.dart';
 import 'centered_circular_progress_indicator.dart';
 
-enum TaskType { tNew, Progress, Completed, Cancelled }
+enum TaskType { New, Progress, Completed, Cancelled }
 
 class TaskCard extends StatefulWidget {
   const TaskCard({
@@ -25,7 +25,7 @@ class TaskCard extends StatefulWidget {
 
 class _TaskCardState extends State<TaskCard> {
   bool _updateTaskStatusInProgress = false;
-  bool _deleteInProgress = false; // Track delete operation
+  bool _deleteInProgress = false;
 
   @override
   Widget build(BuildContext context) {
@@ -122,7 +122,7 @@ class _TaskCardState extends State<TaskCard> {
 
   Color _getTaskChipColor() {
     switch (widget.taskType) {
-      case TaskType.tNew:
+      case TaskType.New:
         return Colors.blue;
       case TaskType.Progress:
         return Colors.purple;
@@ -135,7 +135,7 @@ class _TaskCardState extends State<TaskCard> {
 
   String _getTaskTypeName() {
     switch (widget.taskType) {
-      case TaskType.tNew:
+      case TaskType.New:
         return 'New';
       case TaskType.Progress:
         return 'Progress';
@@ -157,8 +157,8 @@ class _TaskCardState extends State<TaskCard> {
             children: [
               ListTile(
                 title: const Text('New'),
-                trailing: _getTaskStatusTrailing(TaskType.tNew),
-                onTap: () => _onTapTaskStatus(TaskType.tNew),
+                trailing: _getTaskStatusTrailing(TaskType.New),
+                onTap: () => _onTapTaskStatus(TaskType.New),
               ),
               ListTile(
                 title: const Text('In Progress'),
@@ -188,13 +188,14 @@ class _TaskCardState extends State<TaskCard> {
 
   void _onTapTaskStatus(TaskType type) {
     if (type == widget.taskType) {
-      return; // No change needed if the status is the same
+      return;
     }
-    _updateTaskStatus(type.toString().split('.').last); // Convert enum to string
+    print("Updating task status from ${widget.taskType} to $type");
+    _updateTaskStatus(type.toString().split('.').last);
   }
 
   Future<void> _deleteTask() async {
-    _deleteInProgress = true; // Set delete in progress
+    _deleteInProgress = true;
     if (mounted) setState(() {});
 
     try {
@@ -203,13 +204,13 @@ class _TaskCardState extends State<TaskCard> {
       );
 
       if (response.isSuccess) {
-        widget.onStatusUpdate(); // Refresh the parent list
+        widget.onStatusUpdate();
         showSnackBarMessage(context, 'Task deleted successfully');
       } else {
         showSnackBarMessage(context, response.errorMessage ?? 'Delete failed');
       }
     } finally {
-      _deleteInProgress = false; // Reset delete in progress
+      _deleteInProgress = false;
       if (mounted) setState(() {});
     }
   }

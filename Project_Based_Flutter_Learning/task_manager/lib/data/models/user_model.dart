@@ -1,10 +1,13 @@
+import 'dart:convert';
+
 class UserModel {
   late String id;
   late String email;
   late String firstName;
   late String lastName;
   late String mobile;
-  String? photo;
+  //late String photo;
+   String? photo;
 
   String get fullName {
     return '$firstName $lastName';
@@ -18,6 +21,7 @@ class UserModel {
     required this.lastName,
     required this. mobile,
     this. photo,
+
 }
   );
   UserModel.fromJson(Map<String, dynamic> jsonData) {

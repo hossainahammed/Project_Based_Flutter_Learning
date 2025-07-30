@@ -32,8 +32,9 @@ class _TaskManagerAppBarState extends State<TaskManagerAppBar> {
                   AuthController.userModel?.photo == null
                       ? null
                       : MemoryImage(
-                        base64Decode(AuthController.userModel?.photo ?? ''),
+                        base64Decode(AuthController.userModel!.photo !),
                       ),
+
             ),
             SizedBox(width: 16),
             Expanded(

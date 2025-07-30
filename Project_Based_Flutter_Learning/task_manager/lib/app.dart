@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get_navigation/src/root/get_material_app.dart';
+import 'package:task_manager/controller_binder.dart';
 import 'package:task_manager/ui/screens/Sign-Up-Screen.dart';
 import 'package:task_manager/ui/screens/add_new_task_screen.dart';
 import 'package:task_manager/ui/screens/change_password_screen.dart';
@@ -84,6 +85,7 @@ class TaskManagerApp extends StatelessWidget {
 
 
     },
+      initialBinding:ControllerBinder() ,
     );
   }
 }
