@@ -8,7 +8,13 @@ import '../widgets/screen_bagground.dart';
 import 'sign_in_screen.dart';
 
 class changePasswordScreen extends StatefulWidget {
-  const changePasswordScreen({super.key});
+  final String email;
+  final String otp;
+  const changePasswordScreen({
+    super.key,
+    required this.email,
+    required this.otp,
+  });
   static const String name = '/change-password';
 
   @override
@@ -21,6 +27,19 @@ class _changePasswordScreenState extends State<changePasswordScreen> {
   final GlobalKey<FormState> _formkey = GlobalKey<FormState>();
   bool _obscurePassword = true;
   bool _obscureConfirmPassword = true;
+  late String _email;
+  late String _otp;
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    final args = ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>?;
+    if (args != null) {
+      _email = args['email'] ?? '';
+      _otp = args['otp'] ?? '';
+    }
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -134,41 +153,64 @@ class _changePasswordScreenState extends State<changePasswordScreen> {
     );
   }
 
+
   void _onTapSubmitButton() {
     if (_formkey.currentState!.validate()) {
       String newPassword = _passwordTEController.text.trim();
       // Call the API to change the password
       _changePassword(newPassword);
+      final url = Urls.resetPasswordUrl;
     }
   }
   Future<void> _changePassword(String newPassword) async {
-    final url = '${Urls.baseUrl}/RecoverResetPassword';
+    final url = Urls.resetPasswordUrl;
     final headers = {
       'Content-Type': 'application/json',
       'Accept': 'application/json',
     };
-    final body = jsonEncode({'password': newPassword, });
+
+    final Map<String, dynamic> body = {
+      'email': _email,
+      'OTP': _otp, // case-sensitive! must be uppercase OTP
+      'password': newPassword,
+    };
+
+    print('Sending password reset request...');
+    print('URL: $url');
+    print('BODY: $body');
 
     try {
-      final response = await http.post(Uri.parse(url), headers: headers, body: body);
+      final response = await http.post(
+        Uri.parse(url),
+        headers: headers,
+        body: jsonEncode(body),
+      );
+
       print("Response status: ${response.statusCode}");
       print("Response body: ${response.body}");
 
       if (response.statusCode == 200) {
         final jsonResponse = jsonDecode(response.body);
         if (jsonResponse['status'] == 'success') {
-          // Password changed successfully
-          Navigator.pushNamedAndRemoveUntil(context, SignInScreen.name, (predicate) => false);
+          if (mounted) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(content: Text('Password reset successful.')),
+            );
+          }
+          Navigator.pushNamedAndRemoveUntil(context, SignInScreen.name, (_) => false);
         } else {
-          _showError(jsonResponse['data'] ?? 'Failed to change password.');
+          _showError(jsonResponse['data'] ?? 'Password reset failed.');
         }
+
       } else {
-        _showError('Failed to change password. Status code: ${response.statusCode}');
+        _showError('Password reset failed. Status code: ${response.statusCode}');
       }
     } catch (e) {
       _showError('An error occurred: ${e.toString()}');
     }
   }
+
+
 
 
   void _onTapSignInButton() {
@@ -187,3 +229,6 @@ class _changePasswordScreenState extends State<changePasswordScreen> {
     super.dispose();
   }
 }
+
+
+

@@ -27,10 +27,17 @@ class Urls {
 
 
   static String verifyEmailUrl(String email) => '$_baseUrl/RecoverVerifyEmail/$email';
+  // static String verifyOtpUrl(String email, String otp) =>
+  //     '$_baseUrl/RecoverVerifyOtp/${Uri.encodeComponent(email)}/$otp';
+
+  // static String verifyOtpUrl(String email, String otp) =>
+  //     '$_baseUrl/verify-otp?email=$email&otp=$otp';
   static String verifyOtpUrl(String email, String otp) =>
       '$_baseUrl/RecoverVerifyOtp/${Uri.encodeComponent(email)}/$otp';
 
+
   static const String resetPasswordUrl = '$_baseUrl/RecoverResetPassword';
+
 
 
   static const String createNewTaskUrl = '$_baseUrl/createTask';

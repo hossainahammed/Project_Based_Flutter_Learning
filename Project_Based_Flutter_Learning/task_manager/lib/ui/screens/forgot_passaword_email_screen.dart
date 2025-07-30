@@ -113,6 +113,12 @@ class _ForgotPaswordEmailScreenState extends State<ForgotPaswordEmailScreen> {
           print("OTP sent to email.");
           // Navigate to the Pin Verification Screen and pass the email
           Navigator.pushNamed(context, PinVerificationScreen.name, arguments: email);
+          // Navigator.pushNamed(
+          //   context,
+          //   PinVerificationScreen.routeName,
+          //   arguments: email,
+          // );
+
         } else {
           _showError(jsonResponse['message'] ?? 'Failed to send OTP.');
         }

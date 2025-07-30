@@ -256,28 +256,6 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
 
     }
 
-      // UserModel userModel = UserModel(
-      //   id: AuthController.userModel!.id,
-      //   email: _emailTEController.text,
-      //   firstName: _firstNameTEController.text.trim(),
-      //   lastName: _lastNameTEController.text.trim(),
-      //   mobile: _phoneTEController.text.trim(),
-      //   photo:
-      //       imageBytes == null
-      //           ? AuthController.userModel?.photo
-      //           : base64Encode(imageBytes)
-      // );
-
-    //   await AuthController.updateUserData(userModel,AuthController.accessToken ?? '');
-    //
-    //   _passwordTEController.clear();
-    //   if (mounted) {
-    //     showSnackBarMessage(context, 'Profile Update');
-    //   }
-    // } else {
-    //   if (mounted) {
-    //     showSnackBarMessage(context, 'Profile Update');
-    //   }
     }
 
 

@@ -78,7 +78,12 @@ class TaskManagerApp extends StatelessWidget {
         SignUpScreen.name:(context)=>SignUpScreen(),
         ForgotPaswordEmailScreen.name:(context)=>ForgotPaswordEmailScreen(),
         PinVerificationScreen.name:(context)=>PinVerificationScreen(email: '',),
-        changePasswordScreen.name:(context)=>changePasswordScreen(),
+        // PinVerificationScreen.routeName: (context) {
+        //   final email = ModalRoute.of(context)!.settings.arguments as String;
+        //   return PinVerificationScreen(email: email);
+        // },
+         changePasswordScreen.name:(context)=>changePasswordScreen(email: '', otp: '',),
+
         MainNavBarHolderScreen.name:(context)=>MainNavBarHolderScreen(),
         AddNewTaskScreen.name:(context)=>AddNewTaskScreen(),
         UpdateProfileScreen.name:(context)=>UpdateProfileScreen(),

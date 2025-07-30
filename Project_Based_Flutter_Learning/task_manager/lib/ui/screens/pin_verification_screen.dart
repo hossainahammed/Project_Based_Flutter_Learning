@@ -117,6 +117,7 @@ class _PinVerificationScreenState extends State<PinVerificationScreen> {
     );
   }
 
+
   void _onTapSubmitButton() {
     if (_formkey.currentState!.validate()) {
       // TODO: Add logic to verify the OTP with the server
@@ -128,7 +129,7 @@ class _PinVerificationScreenState extends State<PinVerificationScreen> {
   void _onTapSignInButton() {
 
 
-     Navigator.pushNamedAndRemoveUntil(context, SignInScreen.name, (predicate) => false);
+    Navigator.pushNamedAndRemoveUntil(context, SignInScreen.name, (predicate) => false);
   }
 
   void _showError(String message) {
