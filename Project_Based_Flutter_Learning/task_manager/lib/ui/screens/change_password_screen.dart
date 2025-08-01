@@ -201,9 +201,9 @@ class _changePasswordScreenState extends State<changePasswordScreen> {
       'password': newPassword,
     };
 
-    print('🔐 Sending password reset request...');
-    print('➡️ URL: $url');
-    print('📦 BODY: $body');
+    print(' Sending password reset request...');
+    print(' URL: $url');
+    print(' BODY: $body');
 
     try {
       final response = await http.post(
@@ -212,25 +212,25 @@ class _changePasswordScreenState extends State<changePasswordScreen> {
         body: jsonEncode(body),
       );
 
-      print("📬 Response status: ${response.statusCode}");
-      print("📨 Response body: ${response.body}");
+      print(" Response status: ${response.statusCode}");
+      print(" Response body: ${response.body}");
 
       final jsonResponse = jsonDecode(response.body);
 
       if (response.statusCode == 200 && jsonResponse['status'] == 'success') {
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('✅ Password reset successful.')),
+            SnackBar(content: Text(' Password reset successful.')),
           );
           Navigator.pushNamedAndRemoveUntil(context, SignInScreen.name, (_) => false);
         }
       } else {
-        final errorMsg = jsonResponse['data'] ?? '❌ Password reset failed.';
+        final errorMsg = jsonResponse['data'] ?? ' Password reset failed.';
         _showError(errorMsg);
       }
 
     } catch (e) {
-      _showError('🚨 Error: ${e.toString()}');
+      _showError(' Error: ${e.toString()}');
     }
   }
 
