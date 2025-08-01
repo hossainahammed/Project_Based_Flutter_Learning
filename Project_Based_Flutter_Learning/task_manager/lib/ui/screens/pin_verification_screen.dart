@@ -20,15 +20,19 @@ class PinVerificationScreen extends StatefulWidget {
 }
 
 class _PinVerificationScreenState extends State<PinVerificationScreen> {
+  final TextEditingController _emailTEController = TextEditingController();
   final TextEditingController _otpTEController = TextEditingController();
   final GlobalKey<FormState> _formkey = GlobalKey<FormState>();
 
-  late String _email;
+ late  String _email;
+
+
 
   @override
   void initState() {
     super.initState();
     _email = widget.email;
+    print('Email passed to PinVerificationScreen: $_email '); // Debugging line
 
   }
 
@@ -116,16 +120,72 @@ class _PinVerificationScreenState extends State<PinVerificationScreen> {
       ),
     );
   }
-
-
   void _onTapSubmitButton() {
     if (_formkey.currentState!.validate()) {
-      // TODO: Add logic to verify the OTP with the server
-      Navigator.pushNamed(context, changePasswordScreen.name);
-    } else {
-      _showError('Please enter a valid OTP.');
+      final otp = _otpTEController.text.trim();
+
+      // Check if OTP is empty
+      if (otp.isEmpty) {
+        _showError('OTP cannot be empty.');
+        return;
+      }
+
+      // If the OTP is 6 digits (you can adjust this condition):
+      if (otp.length != 6) {
+        _showError('OTP must be 6 digits.');
+        return;
+      }
+
+      // Proceed to the Change Password Screen using the stored email
+      Navigator.pushNamed(
+        context,
+        changePasswordScreen.name,
+        arguments: {
+          'email': _email, // Use the stored email
+          'otp': otp,
+        },
+      );
     }
   }
+  // void _onTapSubmitButton() {
+  //   if (_formkey.currentState!.validate()) {
+  //     final email = _emailTEController.text.trim();
+  //     final otp = _otpTEController.text.trim();
+  //
+  //     if (email.isEmpty || otp.isEmpty) {
+  //       _showError('Email and OTP cannot be empty.');
+  //       return;
+  //     }
+  //
+  //     // If the OTP is 6 digits (you can adjust this condition):
+  //     if (otp.length != 6) {
+  //       _showError('OTP must be 6 digits.');
+  //       return;
+  //     }
+  //
+  //     // Proceed to the Change Password Screen
+  //     Navigator.pushNamed(
+  //       context,
+  //       changePasswordScreen.name,
+  //       arguments: {
+  //         'email': email,
+  //         'otp': otp,
+  //       },
+  //     );
+  //   }
+  // }
+  // void _onTapSubmitButton() {
+  //   if (_formkey.currentState!.validate()) {
+  //     // TODO: Add logic to verify the OTP with the server
+  //     Navigator.pushNamed(context, changePasswordScreen.name,
+  //       arguments: {
+  //         'email': 'user@example.com',
+  //         'otp': '123456',
+  //       },);
+  //   } else {
+  //     _showError('Please enter a valid OTP.');
+  //   }
+  // }
   void _onTapSignInButton() {
 
 

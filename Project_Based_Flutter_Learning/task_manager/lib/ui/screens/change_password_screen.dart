@@ -2,7 +2,6 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
-
 import '../../data/urls.dart';
 import '../widgets/screen_bagground.dart';
 import 'sign_in_screen.dart';
@@ -30,7 +29,28 @@ class _changePasswordScreenState extends State<changePasswordScreen> {
   late String _email;
   late String _otp;
 
+
   @override
+
+  // void initState() {
+  //   super.initState();
+  //   final args = ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
+  //   _email = args['email'] ?? '';
+  //   _otp = args['otp'] ?? '';
+  // }
+
+  // void didChangeDependencies() {
+  //   super.didChangeDependencies();
+  //   final args = ModalRoute.of(context)?.settings.arguments as String?;
+  //   if (args != null && args.isNotEmpty) {
+  //     _email = args;
+  //     print('Email passed to PinVerificationScreen: $_email');
+  //   } else {
+  //     _showError('No email found for OTP verification');
+  //     Navigator.pop(context);
+  //   }
+  // }
+
   void didChangeDependencies() {
     super.didChangeDependencies();
     final args = ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>?;
@@ -38,6 +58,12 @@ class _changePasswordScreenState extends State<changePasswordScreen> {
       _email = args['email'] ?? '';
       _otp = args['otp'] ?? '';
     }
+    else {
+      // Handle the case where arguments are not provided
+      _showError('Email and OTP are required.');
+      Navigator.pop(context); // Optionally navigate back
+    }
+    print('Email: $_email, OTP: $_otp');
   }
 
 
@@ -171,13 +197,13 @@ class _changePasswordScreenState extends State<changePasswordScreen> {
 
     final Map<String, dynamic> body = {
       'email': _email,
-      'OTP': _otp, // case-sensitive! must be uppercase OTP
+      'otp': _otp, // changed from 'OTP' to 'otp'
       'password': newPassword,
     };
 
-    print('Sending password reset request...');
-    print('URL: $url');
-    print('BODY: $body');
+    print('🔐 Sending password reset request...');
+    print('➡️ URL: $url');
+    print('📦 BODY: $body');
 
     try {
       final response = await http.post(
@@ -186,29 +212,75 @@ class _changePasswordScreenState extends State<changePasswordScreen> {
         body: jsonEncode(body),
       );
 
-      print("Response status: ${response.statusCode}");
-      print("Response body: ${response.body}");
+      print("📬 Response status: ${response.statusCode}");
+      print("📨 Response body: ${response.body}");
 
-      if (response.statusCode == 200) {
-        final jsonResponse = jsonDecode(response.body);
-        if (jsonResponse['status'] == 'success') {
-          if (mounted) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text('Password reset successful.')),
-            );
-          }
+      final jsonResponse = jsonDecode(response.body);
+
+      if (response.statusCode == 200 && jsonResponse['status'] == 'success') {
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text('✅ Password reset successful.')),
+          );
           Navigator.pushNamedAndRemoveUntil(context, SignInScreen.name, (_) => false);
-        } else {
-          _showError(jsonResponse['data'] ?? 'Password reset failed.');
         }
-
       } else {
-        _showError('Password reset failed. Status code: ${response.statusCode}');
+        final errorMsg = jsonResponse['data'] ?? '❌ Password reset failed.';
+        _showError(errorMsg);
       }
+
     } catch (e) {
-      _showError('An error occurred: ${e.toString()}');
+      _showError('🚨 Error: ${e.toString()}');
     }
   }
+
+  // Future<void> _changePassword(String newPassword) async {
+  //   final url = Urls.resetPasswordUrl;
+  //   final headers = {
+  //     'Content-Type': 'application/json',
+  //     'Accept': 'application/json',
+  //   };
+  //
+  //   final Map<String, dynamic> body = {
+  //     'email': _email,
+  //     'OTP': _otp,
+  //     'password': newPassword,
+  //   };
+  //
+  //   print('Sending password reset request...');
+  //   print('URL: $url');
+  //   print('BODY: $body');
+  //
+  //   try {
+  //     final response = await http.post(
+  //       Uri.parse(url),
+  //       headers: headers,
+  //       body: jsonEncode(body),
+  //     );
+  //
+  //     print("Response status: ${response.statusCode}");
+  //     print("Response body: ${response.body}");
+  //
+  //     if (response.statusCode == 200) {
+  //       final jsonResponse = jsonDecode(response.body);
+  //       if (jsonResponse['status'] == 'success') {
+  //         if (mounted) {
+  //           ScaffoldMessenger.of(context).showSnackBar(
+  //             SnackBar(content: Text('Password reset successful.')),
+  //           );
+  //         }
+  //         Navigator.pushNamedAndRemoveUntil(context, SignInScreen.name, (_) => false);
+  //       } else {
+  //         _showError(jsonResponse['data'] ?? 'Password reset failed.');
+  //       }
+  //
+  //     } else {
+  //       _showError('Password reset failed. Status code: ${response.statusCode}');
+  //     }
+  //   } catch (e) {
+  //     _showError('An error occurred: ${e.toString()}');
+  //   }
+  // }
 
 
 

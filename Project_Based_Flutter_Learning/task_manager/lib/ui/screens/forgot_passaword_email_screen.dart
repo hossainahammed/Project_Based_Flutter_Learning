@@ -112,11 +112,27 @@ class _ForgotPaswordEmailScreenState extends State<ForgotPaswordEmailScreen> {
         if (jsonResponse['status'] == 'success') {
           print("OTP sent to email.");
           // Navigate to the Pin Verification Screen and pass the email
-          Navigator.pushNamed(context, PinVerificationScreen.name, arguments: email);
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => PinVerificationScreen(email: email),
+            ),
+          );
+          // Navigator.pushNamed(
+          //   context,
+          //   PinVerificationScreen.name,
+          //   arguments: email,  // This will now be correctly received
+          // );
+
+
+          // Navigator.pushNamed(context, PinVerificationScreen.name, arguments: email);
+          //  Navigator.pushNamed(context, PinVerificationScreen.name, arguments: 'email': 'hossainahammed627@gmail.com',);
           // Navigator.pushNamed(
           //   context,
           //   PinVerificationScreen.routeName,
-          //   arguments: email,
+          //   arguments: {
+          //     'email': 'hossainahammed627@gmail.com', // Pass the email here
+          //   },
           // );
 
         } else {
