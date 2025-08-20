@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "41842700246",
+    "project_id": "fir-9d900",
+    "storage_bucket": "fir-9d900.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:41842700246:android:31111fcdd95ee66a853e77",
+        "android_client_info": {
+          "package_name": "com.example.geolocator"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDb531n0AVNbIein33WcfyHFJQP-eEMzgg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

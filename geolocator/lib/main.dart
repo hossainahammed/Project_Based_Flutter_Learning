@@ -1,8 +1,18 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'firebase_options.dart';
 
-void main() {
+// void main() {
+//   runApp(const MyApp());
+// }
+Future<void>main()async{
+  WidgetsFlutterBinding.ensureInitialized();
+  // Import the generated file
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
   runApp(const MyApp());
 }
 
