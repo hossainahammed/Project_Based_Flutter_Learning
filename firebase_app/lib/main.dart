@@ -37,7 +37,7 @@ class MatchListScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text("Match List")),
-      body: StreamBuilder<QuerySnapshot>(
+      body: StreamBuilder<QuerySnapshot>( //Firebase link:https://console.firebase.google.com/u/0/project/fir-9d900/firestore/databases/-default-/data/~2Fmatches~2F%20match2?fb_gclid=Cj0KCQjwqqDFBhDhARIsAIHTlkvWZJCAWeHDCqYlMz_Tgk-M3hsgkYSERziMFN-UyB5Ip7covdzEKNwaAplzEALw_wcB
         stream: FirebaseFirestore.instance.collection("matches").snapshots(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
