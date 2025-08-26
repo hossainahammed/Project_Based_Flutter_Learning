@@ -161,14 +161,14 @@ class _HomeScreenState extends State<HomeScreen> {
         children: [
           FloatingActionButton(
             onPressed: () {
-              // _mapController.moveCamera(
-              //   CameraUpdate.newCameraPosition(
-              //     CameraPosition(
-              //       target: LatLng(23.79348696073093, 90.40612976653253),
-              //       zoom: 16,
-              //     ),
-              //   ),
-              // );
+              _mapController.moveCamera(
+                CameraUpdate.newCameraPosition(
+                  CameraPosition(
+                    target: LatLng(23.79348696073093, 90.40612976653253),
+                    zoom: 16,
+                  ),
+                ),
+              );
               _mapController.animateCamera(
                 CameraUpdate.newCameraPosition(
                   CameraPosition(
